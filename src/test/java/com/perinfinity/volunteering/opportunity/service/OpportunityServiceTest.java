@@ -1,31 +1,91 @@
 package com.perinfinity.volunteering.opportunity.service;
 
+import com.perinfinity.volunteering.opportunity.model.Category;
 import com.perinfinity.volunteering.opportunity.model.Opportunity;
+import com.perinfinity.volunteering.opportunity.model.Skill;
 import com.perinfinity.volunteering.opportunity.repository.OpportunityRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
-@DataMongoTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest
+
 class OpportunityServiceTest {
 
     @Autowired
-    IOpportunityService opportunityService;
+    OpportunityService opportunityService;
 
-    @Autowired
+    @MockBean
     OpportunityRepository opportunityRepository;
+
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void createOpportunity_ShouldReturnSavedOpportunity() {
+        Category category1 = new Category();
+        category1.setName("category1");
+        Category category2 = new Category();
+        category2.setName("category2");
+        List<Category> categories = List.of(category1, category2);
+
+        // Create two Skill objects
+        Skill skill1 = new Skill();
+        skill1.setName("Java");
+        skill1.setLevel("Advanced");
+
+        Skill skill2 = new Skill();
+        skill2.setName("Spring Boot");
+        skill2.setLevel("Intermediate");
+
+        // Add them to a list
+        List<Skill> skills = List.of(skill1, skill2);
+        Opportunity opportunity = Opportunity.builder()
+                .createdAt(LocalDateTime.now())
+                .title("New Title")
+                .description("test description")
+                .categories(categories)
+                .skillsRequired(skills)
+                .orgId(1)
+                .startDate(LocalDate.of(2024,12,10))
+                .endDate(LocalDate.of(2024,12,10))
+                .location("Yaounde")
+                .id("aaaz")
+                .build();
+
+
+        when(opportunityRepository.save(opportunity)).thenReturn(opportunity);
+
+        Opportunity savedOpportunity = opportunityService.createOpportunity(opportunity);
+
+        assertNotNull(savedOpportunity);
+        assertEquals("New Title", savedOpportunity.getTitle());
+        assertEquals(opportunity, savedOpportunity);
+    }
 
     @Test
     void createOpportunity() {

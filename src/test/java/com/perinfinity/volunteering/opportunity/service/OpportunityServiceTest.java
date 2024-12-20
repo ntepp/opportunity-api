@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
@@ -47,10 +48,8 @@ class OpportunityServiceTest {
 
     @Test
     void createOpportunity_ShouldReturnSavedOpportunity() {
-        Category category1 = new Category();
-        category1.setName("category1");
-        Category category2 = new Category();
-        category2.setName("category2");
+        Category category1 = new Category("category1");
+        Category category2 = new Category("category2");
         List<Category> categories = List.of(category1, category2);
 
         // Create two Skill objects
@@ -89,7 +88,7 @@ class OpportunityServiceTest {
 
     @Test
     void createOpportunity() {
-        Opportunity newOpportunities = Opportunity.builder()
+        Opportunity newOpportunity = Opportunity.builder()
                 .createdAt(LocalDateTime.now())
                 .title("test")
                 .description("test description")
@@ -98,8 +97,8 @@ class OpportunityServiceTest {
                 .endDate(LocalDate.of(2024,12,10))
                 .location("Yaounde")
                 .build();
-
-        Opportunity opportunity = opportunityService.createOpportunity(newOpportunities);
+        when(opportunityRepository.save(newOpportunity)).thenReturn(newOpportunity);
+        Opportunity opportunity = opportunityService.createOpportunity(newOpportunity);
         assertNotNull(opportunity);
     }
 
@@ -123,8 +122,11 @@ class OpportunityServiceTest {
         }
 
 
-        opportunityRepository.saveAll(expectedOpportunities);
         Pageable page1 = PageRequest.of(0, 5);
+        Page<Opportunity> opportunitiesPage = new PageImpl<>(expectedOpportunities, page1, 5);;
+
+        when(opportunityRepository.findAll(page1)).thenReturn(opportunitiesPage);
+        when(opportunityRepository.findAll(page1.next())).thenReturn(opportunitiesPage);
         Page<Opportunity> opportunityPage1 =  opportunityService.getAllOpportunities(page1);
         Page<Opportunity> opportunityPage2 =  opportunityService.getAllOpportunities(page1.next());
         System.out.println(opportunityPage1.getContent());

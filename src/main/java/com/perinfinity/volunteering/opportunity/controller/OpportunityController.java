@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("api/opportunities")
+@RequestMapping("api/v1/opportunities")
 public class OpportunityController {
 
     @Autowired

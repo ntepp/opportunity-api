@@ -27,18 +27,24 @@ Ensure you have the following installed:
 ### Build and Run
 
 1. Clone the repository:
-   ```sh
+   ```
    git clone https://github.com/ntepp/opportunity-api.git
    cd opportunity-api
 
-Build the project (skip tests):
-
+2. Build the project (skip tests):
+```
 mvn clean install -DskipTests
-Run the tests:
+```
 
+3. Run the tests:
+```
 mvn test
-Run the application:
+```
 
+4. Run the application:
+```
 mvn spring-boot:run
-License
+```
+
+### License
 This project is licensed under the MIT License.

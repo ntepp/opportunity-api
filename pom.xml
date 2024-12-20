@@ -71,6 +71,7 @@
     </dependencies>
 
     <build>
+        <finalName>opportunity-service-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

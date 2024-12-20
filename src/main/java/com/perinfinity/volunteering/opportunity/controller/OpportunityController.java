@@ -10,22 +10,28 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/opportunities")
+@RequestMapping("api/v1/opportunities")
 public class OpportunityController {
 
     @Autowired
     private IOpportunityService opportunityService;
 
     @PostMapping
-    public Opportunity createOpportunity(@RequestBody Opportunity opportunity) {
+    public ResponseEntity<Void> createOpportunity(@RequestBody Opportunity opportunity) {
         opportunity.setCreatedAt(LocalDateTime.now());
-        return opportunityService.createOpportunity(opportunity);
+        Opportunity newOpportunity = opportunityService.createOpportunity(opportunity);
+        URI uri = entityWithLocation(newOpportunity.getId());
+        return ResponseEntity.created(uri).build();
     }
+
+
 
     @GetMapping
     public OpportunityResponse getAllOpportunities(@RequestParam(required = false) String title,
@@ -67,5 +73,12 @@ public class OpportunityController {
     public ResponseEntity<Void> deleteOpportunity(@PathVariable String id) {
         opportunityService.deleteOpportunity(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private static URI entityWithLocation(String childPath) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{childPath}")
+                .buildAndExpand(childPath).toUri();
     }
 }

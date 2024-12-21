@@ -47,6 +47,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
             # Build Docker image
+
       - name: Build Docker image
         run: |
           # Extract TAG dynamically based on GitHub reference
@@ -61,14 +62,11 @@ jobs:
           # Log the resolved TAG
           echo "Resolved TAG: $TAG"
           
-          IMAGE_NAME=gcr.io/$GCP_PROJECT_ID/opportunity-service
+          IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/opportunity-service
           docker build -t $IMAGE_NAME:$TAG .
 
       # Push Docker image to GCR
       - name: Push Docker image to GCR
         run: |
-          IMAGE_NAME=gcr.io/$GCP_PROJECT_ID/opportunity-service
+          IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/opportunity-service
           docker push $IMAGE_NAME:$TAG
-
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}

@@ -49,7 +49,18 @@ jobs:
             # Build Docker image
       - name: Build Docker image
         run: |
-          TAG=${{ github.ref == 'refs/heads/master' && 'latest' || 'github.ref#refs/tags/' }}
+          # Extract TAG dynamically based on GitHub reference
+          if [[ "$GITHUB_REF" == refs/heads/* ]]; then
+            TAG=${GITHUB_REF#refs/heads/}   # Extract branch name
+          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG=${GITHUB_REF#refs/tags/}    # Extract tag name
+          else
+            TAG="latest"                    # Default to "latest" if no match
+          fi
+          
+          # Log the resolved TAG
+          echo "Resolved TAG: $TAG"
+          
           IMAGE_NAME=gcr.io/$GCP_PROJECT_ID/opportunity-service
           docker build -t $IMAGE_NAME:$TAG .
 

@@ -46,12 +46,18 @@ jobs:
           registry: gcr.io
           username: _json_key
           password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-
-      - name: Build and push Docker image
+            # Build Docker image
+      - name: Build Docker image
         run: |
-          TAG=${{ github.ref == 'refs/heads/master' && 'latest' || github.ref#refs/tags/' }}
-          docker buildx build --push \
-            --tag gcr.io/$GCP_PROJECT_ID/opportunity-service:$TAG \
-            .
+          TAG=${{ github.ref == 'refs/heads/master' && 'latest' || 'github.ref#refs/tags/' }}
+          IMAGE_NAME=gcr.io/$GCP_PROJECT_ID/opportunity-service
+          docker build -t $IMAGE_NAME:$TAG .
+
+      # Push Docker image to GCR
+      - name: Push Docker image to GCR
+        run: |
+          IMAGE_NAME=gcr.io/<YOUR-GCP-PROJECT-ID>/opportunity-service
+          docker push $IMAGE_NAME
+
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}

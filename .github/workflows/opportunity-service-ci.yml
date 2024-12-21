@@ -56,7 +56,7 @@ jobs:
       # Push Docker image to GCR
       - name: Push Docker image to GCR
         run: |
-          IMAGE_NAME=gcr.io/<YOUR-GCP-PROJECT-ID>/opportunity-service
+          IMAGE_NAME=gcr.io/$GCP_PROJECT_ID/opportunity-service
           docker push $IMAGE_NAME:$TAG
 
         env:

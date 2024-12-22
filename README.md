@@ -4,7 +4,7 @@ Manage the creation, updating, and deletion of volunteer opportunities. Retrieve
 
 ## CI/CD Status
 
-![Build & Test](https://github.com/ntepp/opportunity-api/actions/workflows/opportunity-service.yml/badge.svg)
+![Build & Test](https://github.com/ntepp/opportunity-api/actions/workflows/opportunity-service-ci.yml/badge.svg)
 
 ## Features
 

@@ -16,6 +16,8 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static com.perinfinity.volunteering.opportunity.utils.URIUtils.entityWithLocation;
+
 @RestController
 @RequestMapping("api/v1/opportunities")
 public class OpportunityController {
@@ -75,10 +77,5 @@ public class OpportunityController {
         return ResponseEntity.noContent().build();
     }
 
-    private static URI entityWithLocation(String childPath) {
-        return ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .path("/{childPath}")
-                .buildAndExpand(childPath).toUri();
-    }
+
 }

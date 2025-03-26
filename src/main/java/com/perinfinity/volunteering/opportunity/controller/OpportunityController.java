@@ -2,7 +2,9 @@ package com.perinfinity.volunteering.opportunity.controller;
 
 import com.perinfinity.volunteering.opportunity.dto.OpportunityResponse;
 import com.perinfinity.volunteering.opportunity.exception.ResourceNotFoundException;
+import com.perinfinity.volunteering.opportunity.model.Category;
 import com.perinfinity.volunteering.opportunity.model.Opportunity;
+import com.perinfinity.volunteering.opportunity.service.ICategoryService;
 import com.perinfinity.volunteering.opportunity.service.IOpportunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static com.perinfinity.volunteering.opportunity.utils.URIUtils.entityWithLocation;
@@ -25,9 +28,14 @@ public class OpportunityController {
     @Autowired
     private IOpportunityService opportunityService;
 
+    @Autowired
+    ICategoryService categoryService;
+
     @PostMapping
     public ResponseEntity<Void> createOpportunity(@RequestBody Opportunity opportunity) {
         opportunity.setCreatedAt(LocalDateTime.now());
+        List<Category> categoryList = categoryService.createCategories(opportunity.getCategories());
+        opportunity.setCategories(categoryList);
         Opportunity newOpportunity = opportunityService.createOpportunity(opportunity);
         URI uri = entityWithLocation(newOpportunity.getId());
         return ResponseEntity.created(uri).build();

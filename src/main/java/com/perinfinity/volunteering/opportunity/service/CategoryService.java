@@ -18,11 +18,18 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public List<Category> getAllCategories() {
+
         return this.categoryRepository.findAll();
     }
 
     @Override
     public Category createCategory(Category category) {
+        // TODO: before check that the categories name doesn't exist
         return this.categoryRepository.save(category);
+    }
+
+    @Override
+    public List<Category> createCategories(List<Category> categories) {
+        return this.categoryRepository.saveAll(categories);
     }
 }

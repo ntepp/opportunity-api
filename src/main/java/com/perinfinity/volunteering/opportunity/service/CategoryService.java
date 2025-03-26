@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoryInitializer implements ICategoryService{
+public class CategoryService implements ICategoryService{
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryInitializer(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 

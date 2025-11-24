@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.time.LocalDate;
 
 public interface IOpportunityService {
     Opportunity createOpportunity(Opportunity opportunity);
@@ -13,4 +14,7 @@ public interface IOpportunityService {
     Opportunity updateOpportunity(String id, Opportunity opportunityDetails);
     Page<Opportunity> getByTitleContainingIgnoreCase(String title, Pageable pageable);
     void deleteOpportunity(String id);
+    Page<Opportunity> search(String title, String category, String town, LocalDate startDate, Pageable pageable);
+
+    Page<Opportunity> searchByOrgId(String orgId, Pageable pageable);
 }

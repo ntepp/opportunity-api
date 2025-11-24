@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -55,5 +56,17 @@ public class OpportunityService implements IOpportunityService{
                 .orElseThrow(() -> new ResourceNotFoundException("Opportunity not found for this id :: " + id));
         opportunityRepository.delete(opportunity);
     }
+
+    @Override
+    public Page<Opportunity> search(String title, String category, String town, LocalDate startDate, Pageable pageable) {
+        return opportunityRepository.search(title, category, town, startDate, pageable);
+    }
+
+    @Override
+    public Page<Opportunity> searchByOrgId(String orgId, Pageable pageable) {
+        return opportunityRepository.findByOrgId(orgId, pageable);
+    }
+
+
 }
 

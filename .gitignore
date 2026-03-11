@@ -34,3 +34,8 @@ build/
 .vscode/
 
 data/
+
+### Environment variables (never commit secrets) ###
+.env
+.env.local
+.env.*.local

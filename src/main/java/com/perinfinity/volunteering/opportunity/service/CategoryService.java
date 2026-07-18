@@ -4,6 +4,7 @@ import com.perinfinity.volunteering.opportunity.model.Category;
 import com.perinfinity.volunteering.opportunity.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,12 +25,20 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public Category createCategory(Category category) {
-        // TODO: before check that the categories name doesn't exist
-        return this.categoryRepository.save(category);
+        return this.categoryRepository.findByName(category.getName())
+                .orElseGet(() -> this.categoryRepository.save(category));
     }
 
+    /**
+     * Réutilise les catégories existantes (recherche par nom) et ne crée que
+     * les nouvelles — sinon chaque création d'opportunité duplique ses catégories.
+     */
     @Override
     public List<Category> createCategories(List<Category> categories) {
-        return this.categoryRepository.saveAll(categories);
+        List<Category> result = new ArrayList<>();
+        for (Category category : categories) {
+            result.add(createCategory(category));
+        }
+        return result;
     }
 }

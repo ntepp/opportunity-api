@@ -10,5 +10,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface OpportunityRepository extends MongoRepository<Opportunity, String>, OpportunityRepositoryCustom {
     Page<Opportunity> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-    Page<Opportunity> findByOrgId(String orgId, Pageable pageable);
+    Page<Opportunity> findByOrgId(Integer orgId, Pageable pageable);
 }
